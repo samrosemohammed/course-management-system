@@ -61,59 +61,104 @@ public class DashBoard {
         addCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddCourse addCourse = new AddCourse();
-                addCourse.showAddCourse();
+                if ("Student".equals(userType) || "Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    AddCourse addCourse = new AddCourse();
+                    addCourse.showAddCourse();
+                }
             }
         });
         editCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EditCourse editCourse = new EditCourse();
-                editCourse.showEditCourse();
+                if ("Student".equals(userType) || "Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    EditCourse editCourse = new EditCourse();
+                    editCourse.showEditCourse();
+                }
             }
         });
         deleteCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DeleteCourse deleteCourse = new DeleteCourse();
-                deleteCourse.showDeleteCourse();
+                if ("Student".equals(userType) || "Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    DeleteCourse deleteCourse = new DeleteCourse();
+                    deleteCourse.showDeleteCourse();
+                }
             }
         });
         addTutorsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddTutors addTutors = new AddTutors();
-                addTutors.showAddTutor();
+                if ("Student".equals(userType) || "Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    AddTutors addTutors = new AddTutors();
+                    addTutors.showAddTutor();
+                }
             }
         });
         editTutorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EditTutors editTutors = new EditTutors();
-                editTutors.showEditTutor();
+                if ("Student".equals(userType) || "Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    EditTutors editTutors = new EditTutors();
+                    editTutors.showEditTutor();
+                }
             }
         });
         deleteTutorsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DeleteTutors deleteTutors = new DeleteTutors();
-                deleteTutors.showDeleteTutor();
+                if ("Student".equals(userType) || "Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    DeleteTutors deleteTutors = new DeleteTutors();
+                    deleteTutors.showDeleteTutor();
+                }
             }
         });
         editStudentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EditStudent editStudent = new EditStudent();
-                editStudent.showEditStudent();
+                if ("Student".equals(userType) || "Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    EditStudent editStudent = new EditStudent();
+                    editStudent.showEditStudent();
+                }
             }
         });
         deleteStudentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DeleteStudent deleteStudent = new DeleteStudent();
-                deleteStudent.showDeleteStudent();
+                if ("Student".equals(userType) || "Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    DeleteStudent deleteStudent = new DeleteStudent();
+                    deleteStudent.showDeleteStudent();
+                }
             }
         });
+
+        createStudentReportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if ("Student".equals(userType) || "Admin".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    CreateStudentReport createStudentReport = new CreateStudentReport();
+                    createStudentReport.showStudentReport();
+                }
+            }
+        });
+
         veiwProjectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -121,24 +166,16 @@ public class DashBoard {
                 progressReport.showProgressReport();
             }
         });
-        createStudentReportButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CreateStudentReport createStudentReport = new CreateStudentReport();
-                createStudentReport.showStudentReport();
-            }
-        });
-        savePasswordButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changePassword();
-            }
-        });
+
         addModuleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddModule addModule = new AddModule();
-                addModule.showAddModule();
+                if ("Student".equals(userType) || "Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    AddModule addModule = new AddModule();
+                    addModule.showAddModule();
+                }
             }
         });
         editInfoButton.addActionListener(new ActionListener() {
@@ -148,11 +185,23 @@ public class DashBoard {
                 editInfo.showEditInfo();
             }
         });
+
+        savePasswordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changePassword();
+            }
+        });
+
         enrollClicked.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                StudentEnrollment enrollStudent = new StudentEnrollment();
-                enrollStudent.showStudentEnrollment();
+                if ("Teacher".equals(userType)) {
+                    promptAccessMessage();
+                } else {
+                    StudentEnrollment enrollStudent = new StudentEnrollment();
+                    enrollStudent.showStudentEnrollment();
+                }
             }
         });
         logoutButton.addActionListener(new ActionListener() {
@@ -231,6 +280,11 @@ public class DashBoard {
                 filterModules();
             }
         });
+    }
+
+
+    public void promptAccessMessage() {
+        JOptionPane.showMessageDialog(null, "Access denied. You do not have permission to add a course.", "Access Denied", JOptionPane.WARNING_MESSAGE);
     }
 
     private void filterCourses() {
@@ -831,6 +885,51 @@ public class DashBoard {
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error updating enrollment table: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void disableNonStudentAccess() {
+        buttonHidden();
+    }
+
+    public void buttonHidden() {
+        deleteCourseButton.setVisible(false);
+        addCourseButton.setVisible(false);
+        editCourseButton.setVisible(false);
+
+        // tutor
+        addTutorsButton.setVisible(false);
+        editTutorButton.setVisible(false);
+        deleteTutorsButton.setVisible(false);
+
+        // student
+        editStudentButton.setVisible(false);
+        deleteStudentButton.setVisible(false);
+
+        // module
+        addModuleButton.setVisible(false);
+
+        // report
+        createStudentReportButton.setVisible(false);
+    }
+
+    // Method to handle button clicks
+    private void handleButtonAction(String action) {
+        // Check if the user is a student
+        if ("Student".equals(userType)) {
+            // Prompt a message for access denial
+            JOptionPane.showMessageDialog(null, "Access denied. You do not have permission to " + action + ".", "Access Denied", JOptionPane.WARNING_MESSAGE);
+        } else {
+            // Allow access for other user types
+            switch (action) {
+                case "Add Course":
+                    // Perform action for adding course
+                    break;
+                case "Edit Course":
+                    // Perform action for editing course
+                    break;
+                // Add cases for other actions if needed
+            }
         }
     }
 
