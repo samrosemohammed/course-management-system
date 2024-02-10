@@ -292,7 +292,6 @@ public class DashBoard {
             // Get the text entered in the courseSearch field
             String searchText = courseSearch.getText().trim().toLowerCase();
 
-            // Replace the URL, username, and password with your actual database information
             String url = "jdbc:mysql://localhost:3306/login";
             String username = "root";
             String password = "";
@@ -512,6 +511,9 @@ public class DashBoard {
 
         // display enroll table
         updateEnrollTable();
+
+        // update dashboard table
+        updateDashboardTable();
 
         // for setting detail
         profileDetails();
@@ -888,49 +890,42 @@ public class DashBoard {
         }
     }
 
-    public void disableNonStudentAccess() {
-        buttonHidden();
-    }
+    public void updateDashboardTable() {
+        try {
+            // Replace the URL, username, and password with your actual database information
+            String url = "jdbc:mysql://localhost:3306/login";
+            String username = "root";
+            String password = "";
 
-    public void buttonHidden() {
-        deleteCourseButton.setVisible(false);
-        addCourseButton.setVisible(false);
-        editCourseButton.setVisible(false);
+            Connection connection = DriverManager.getConnection(url, username, password);
 
-        // tutor
-        addTutorsButton.setVisible(false);
-        editTutorButton.setVisible(false);
-        deleteTutorsButton.setVisible(false);
+            String query = "SELECT SID, username, email, last_login_date FROM student_login";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-        // student
-        editStudentButton.setVisible(false);
-        deleteStudentButton.setVisible(false);
+                // Creating a DefaultTableModel to store the data for the JTable
+                DefaultTableModel model = new DefaultTableModel();
+                model.addColumn("SID");
+                model.addColumn("Username");
+                model.addColumn("Email");
+                model.addColumn("Last Login Date");
 
-        // module
-        addModuleButton.setVisible(false);
+                // Populating the model with data from the ResultSet
+                while (resultSet.next()) {
+                    model.addRow(new Object[]{
+                            resultSet.getString("SID"),
+                            resultSet.getString("username"),
+                            resultSet.getString("email"),
+                            resultSet.getString("last_login_date")
+                    });
+                }
 
-        // report
-        createStudentReportButton.setVisible(false);
-    }
-
-    // Method to handle button clicks
-    private void handleButtonAction(String action) {
-        // Check if the user is a student
-        if ("Student".equals(userType)) {
-            // Prompt a message for access denial
-            JOptionPane.showMessageDialog(null, "Access denied. You do not have permission to " + action + ".", "Access Denied", JOptionPane.WARNING_MESSAGE);
-        } else {
-            // Allow access for other user types
-            switch (action) {
-                case "Add Course":
-                    // Perform action for adding course
-                    break;
-                case "Edit Course":
-                    // Perform action for editing course
-                    break;
-                // Add cases for other actions if needed
+                // Setting the dashboard for the JTable
+                table1.setModel(model);
             }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error updating student table: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 }
